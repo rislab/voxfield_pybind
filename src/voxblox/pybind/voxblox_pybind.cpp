@@ -48,7 +48,7 @@ REGISTER_INTEGRATOR_TYPE(MergedTsdfIntegrator);
 // TODO: Move this to a seprate util-conversions file
 namespace {
 
-auto PointcloutToVoxblox(const std::vector<Eigen::Vector3d>& points) {
+auto PointcloudToVoxblox(const std::vector<Eigen::Vector3d>& points) {
     // Convert data to voxblox format
     voxblox::Pointcloud points_C(points.size());
     for (const auto& p : points) {
@@ -139,7 +139,7 @@ void pybind_integrator(py::module& m) {
         .def("_integrate",
              [](Integrator& self, const std::vector<Eigen::Vector3d>& points,
                 const Eigen::Matrix4f& extrinsics) {
-                 auto [points_C, colors] = PointcloutToVoxblox(points);
+                 auto [points_C, colors] = PointcloudToVoxblox(points);
                  auto T_G_C = voxblox::Transformation(extrinsics);
                  self.integratePointCloud(T_G_C, points_C, colors);
              })

@@ -18,7 +18,7 @@
 #include "stl_vector_eigen.h"
 
 // voxblox stuff
-#include "voxblox/integrator/tsdf_integrator.h"
+#include "voxblox/integrator/np_tsdf_integrator.h"
 #include "voxblox/io/sdf_ply.h"
 PYBIND11_MAKE_OPAQUE(std::vector<Eigen::Vector3d>);
 PYBIND11_MAKE_OPAQUE(std::vector<Eigen::Vector3i>);
@@ -39,16 +39,16 @@ struct to_string {
         static char const* value() { return #T; } \
     };
 
-REGISTER_INTEGRATOR_TYPE(SimpleTsdfIntegrator);
-REGISTER_INTEGRATOR_TYPE(FastTsdfIntegrator);
-REGISTER_INTEGRATOR_TYPE(MergedTsdfIntegrator);
+REGISTER_INTEGRATOR_TYPE(NpSimpleTsdfIntegrator);
+REGISTER_INTEGRATOR_TYPE(NpFastTsdfIntegrator);
+REGISTER_INTEGRATOR_TYPE(NpMergedTsdfIntegrator);
 
 }  // namespace voxblox
 
 // TODO: Move this to a seprate util-conversions file
 namespace {
 
-auto PointcloutToVoxblox(const std::vector<Eigen::Vector3d>& points) {
+auto PointcloudToVoxblox(const std::vector<Eigen::Vector3d>& points) {
     // Convert data to voxblox format
     voxblox::Pointcloud points_C(points.size());
     for (const auto& p : points) {
@@ -100,7 +100,21 @@ public:
 };
 
 TsdfIntegratorBase::Config GetConfigFromYaml(const py::dict& cfg) {
-    TsdfIntegratorBase::Config config;
+    NpTsdfIntegratorBase::Config config;
+
+
+    // Modify NpTsdfIntegratorBase default parameters that are set via yaml/rosparams
+    if (cfg.contains("curve_assumption")) config.curve_assumption = cfg["curve_assumption"].cast<bool>();
+    if (cfg.contains("max_ray_length_m")) config.max_ray_length_m = cfg["max_ray_length_m"].cast<float>();
+    if (cfg.contains("min_ray_length_m")) config.min_ray_length_m = cfg["min_ray_length_m"].cast<float>();
+    if (cfg.contains("merge_with_clear")) config.merge_with_clear = cfg["merge_with_clear"].cast<bool>();
+    if (cfg.contains("normal_available")) config.normal_available = cfg["normal_available"].cast<bool>();
+    if (cfg.contains("reliable_band_ratio")) config.reliable_band_ratio = cfg["reliable_band_ratio"].cast<float>();
+    if (cfg.contains("reliable_normal_ratio_thre")) config.reliable_normal_ratio_thre = cfg["reliable_normal_ratio_thre"].cast<float>();
+    if (cfg.contains("use_const_weight")) config.use_const_weight = cfg["use_const_weight"].cast<bool>();
+    if (cfg.contains("use_weight_dropoff")) config.use_weight_dropoff = cfg["use_weight_dropoff"].cast<bool>();
+    if (cfg.contains("weight_reduction_exp")) config.weight_reduction_exp = cfg["weight_reduction_exp"].cast<float>();
+
     config.max_weight = cfg["max_weight"].cast<float>();
     config.voxel_carving_enabled = cfg["voxel_carving_enabled"].cast<bool>();
     config.min_ray_length_m = cfg["min_ray_length_m"].cast<FloatingPoint>();
@@ -139,7 +153,7 @@ void pybind_integrator(py::module& m) {
         .def("_integrate",
              [](Integrator& self, const std::vector<Eigen::Vector3d>& points,
                 const Eigen::Matrix4f& extrinsics) {
-                 auto [points_C, colors] = PointcloutToVoxblox(points);
+                 auto [points_C, colors] = PointcloudToVoxblox(points);
                  auto T_G_C = voxblox::Transformation(extrinsics);
                  self.integratePointCloud(T_G_C, points_C, colors);
              })
@@ -156,8 +170,8 @@ PYBIND11_MODULE(voxblox_pybind, m) {
         m, "_VectorEigen3i", "std::vector<Eigen::Vector3i>",
         py::py_array_to_vectors_int<Eigen::Vector3i>);
 
-    pybind_integrator<SimpleTsdfIntegrator>(m);
-    pybind_integrator<FastTsdfIntegrator>(m);
-    pybind_integrator<MergedTsdfIntegrator>(m);
+    pybind_integrator<NpSimpleTsdfIntegrator>(m);
+    pybind_integrator<NpFastTsdfIntegrator>(m);
+    pybind_integrator<NpMergedTsdfIntegrator>(m);
 };
 }  // namespace voxblox

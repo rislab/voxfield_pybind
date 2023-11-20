@@ -1,13 +1,3 @@
-'''
-Created Date: Nov 20 2023
-Author: Jonathan Lee
------
-Last Modified: Nov 20 2023
-Modified By: Jonathan Lee
------
-Description:
-
-'''
 from abc import ABC, abstractmethod
 from typing import Dict
 
@@ -17,7 +7,7 @@ from . import voxblox_pybind
 from .config import __default_config__
 
 
-class BaseTsdfIntegrator(ABC):
+class BaseNpTsdfIntegrator(ABC):
     @abstractmethod
     def __init__(self, voxel_size: float, sdf_trunc: float, config: Dict = __default_config__):
         self.voxel_size = np.float32(voxel_size)
@@ -50,25 +40,25 @@ class BaseTsdfIntegrator(ABC):
         return np.asarray(vertices), np.asarray(triangles)
 
 
-class SimpleTsdfIntegrator(BaseTsdfIntegrator):
+class NpSimpleTsdfIntegrator(BaseNpTsdfIntegrator):
     def __init__(self, voxel_size: float, sdf_trunc: float, config: Dict = __default_config__):
         super().__init__(voxel_size, sdf_trunc, config)
-        self._integrator = voxblox_pybind._SimpleTsdfIntegrator(
+        self._integrator = voxblox_pybind._SimpleNpTsdfIntegrator(
             voxel_size=self.voxel_size, sdf_trunc=self.sdf_trunc, config=self.config
         )
 
 
-class FastTsdfIntegrator(BaseTsdfIntegrator):
+class NpFastTsdfIntegrator(BaseNpTsdfIntegrator):
     def __init__(self, voxel_size: float, sdf_trunc: float, config: Dict = __default_config__):
         super().__init__(voxel_size, sdf_trunc, config)
-        self._integrator = voxblox_pybind._FastTsdfIntegrator(
+        self._integrator = voxblox_pybind._FastNpTsdfIntegrator(
             voxel_size=self.voxel_size, sdf_trunc=self.sdf_trunc, config=self.config
         )
 
 
-class MergedTsdfIntegrator(BaseTsdfIntegrator):
+class NpMergedTsdfIntegrator(BaseNpTsdfIntegrator):
     def __init__(self, voxel_size: float, sdf_trunc: float, config: Dict = __default_config__):
         super().__init__(voxel_size, sdf_trunc, config)
-        self._integrator = voxblox_pybind._MergedTsdfIntegrator(
+        self._integrator = voxblox_pybind._MergedNpTsdfIntegrator(
             voxel_size=self.voxel_size, sdf_trunc=self.sdf_trunc, config=self.config
         )
