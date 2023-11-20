@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<package format="2">
+  <name>voxfield_py</name>
+  <version>0.0.0</version>
+  <description>Python bindings over Voxfield</description>
+
+  <author email="jlee6@andrew.cmu.edu">Jonathan Lee</author>
+  <maintainer email="jlee6@andrew.cmu.edu">Jonathan Lee</maintainer>
+  <license>BSD</license>
+
+  <buildtool_depend>catkin</buildtool_depend>
+  <buildtool_depend>catkin_simple</buildtool_depend>
+
+  <depend>pybind11_catkin</depend>
+  <depend>pybind11_utils</depend>
+  <depend>voxblox</depend>
+  <depend>voxblox_ros</depend>
+  <depend>cv_bridge</depend>
+  <depend>map_utils</depend>
+
+</package>
