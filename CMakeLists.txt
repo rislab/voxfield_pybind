@@ -26,5 +26,8 @@ include_directories(
 )
 
 # pybind modules
-pybind_add_module(voxfield_pybind src/voxblox/pybind/voxblox_pybind.cpp)
-target_include_directories(voxfield_pybind PUBLIC ${pybind11_catkin_INCLUDE_DIRS})
+pybind_add_module(voxblox_pybind src/voxblox/pybind/voxblox_pybind.cpp)
+target_include_directories(voxblox_pybind PUBLIC ${pybind11_catkin_INCLUDE_DIRS})
+
+# pybind_add_module(voxfield_pybind src/voxblox/pybind/voxfield_pybind.cpp)
+# target_include_directories(voxfield_pybind PUBLIC ${pybind11_catkin_INCLUDE_DIRS})
