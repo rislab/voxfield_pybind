@@ -75,8 +75,8 @@ truncation_distance: -3.0
 # TSDF integration
 method: fast # select from simple, fast and merged
 merge_with_clear: true
-max_ray_length_m: 10.0
-min_ray_length_m: 1.0
+# max_ray_length_m: 10.0
+# min_ray_length_m: 1.0
 integration_threads: 6
 normal_available: true
 use_const_weight: false
@@ -118,11 +118,11 @@ sensor_frame: velodyne
 # Timer
 # if set as a negative value, it means the frame interval for the processing
 # for example -5.0 means conduct the operation per 5 frames
-update_mesh_every_n_sec: 0.5
-update_esdf_every_n_sec: 0.5
-publish_map_every_n_sec: 0.5
-eval_esdf_every_n_sec: 0.0
-min_time_between_msgs_sec: 0.0
+# update_mesh_every_n_sec: 0.5
+# update_esdf_every_n_sec: 0.5
+# publish_map_every_n_sec: 0.5
+# eval_esdf_every_n_sec: 0.0
+# min_time_between_msgs_sec: 0.0
 
 # Visualization
 color_mode: lambert_color # select from color, normals, height, lambert, lambert_color
@@ -135,6 +135,6 @@ publish_robot_model: true
 slice_level: 0.3
 robot_model_scale: 1.0
 
-# Logging
-verbose: false
-timing: true
+# # Logging
+# verbose: false
+# timing: true
