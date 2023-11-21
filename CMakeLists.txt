@@ -8,15 +8,16 @@ find_package(catkin REQUIRED COMPONENTS
         pybind11_catkin
         voxblox
         voxblox_ros
-            )
+        yaml-cpp
+)
 
 # declares dependencies for packages that depend on this package
 catkin_package(LIBRARIES
         CATKIN_DEPENDS
 	      pybind11_catkin
-          voxblox
-          voxblox_ros
-        )
+        voxblox
+        voxblox_ros
+)
 
 catkin_python_setup()
 

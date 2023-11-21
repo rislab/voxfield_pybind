@@ -17,6 +17,10 @@
 // Speed up Pyhton <-> C++ API
 #include "stl_vector_eigen.h"
 
+// A portion of voxfield/voxblox_ros/include/voxblox_ros/np_tsdf_server
+// with ROS dependencies removed
+#include "np_tsdf_server.h"
+
 // voxblox stuff
 #include "voxblox/integrator/np_tsdf_integrator.h"
 #include "voxblox/io/sdf_ply.h"
@@ -87,7 +91,7 @@ auto ExtractMeshFromVoxbloxLayer(const voxblox::Layer<voxblox::TsdfVoxel>* layer
 
 namespace voxblox {
 
-template <class IntegratorBase = TsdfIntegratorBase>
+template <class IntegratorBase = NpTsdfIntegratorBase>
 class PyIntegratorBase : public IntegratorBase {
 public:
     using IntegratorBase::IntegratorBase;
@@ -99,37 +103,36 @@ public:
     }
 };
 
-TsdfIntegratorBase::Config GetConfigFromYaml(const py::dict& cfg) {
+NpTsdfIntegratorBase::Config GetConfigFromYaml(const py::dict& cfg) {
     NpTsdfIntegratorBase::Config config;
 
-
-    // Modify NpTsdfIntegratorBase default parameters that are set via yaml/rosparams
-    if (cfg.contains("curve_assumption")) config.curve_assumption = cfg["curve_assumption"].cast<bool>();
-    if (cfg.contains("max_ray_length_m")) config.max_ray_length_m = cfg["max_ray_length_m"].cast<float>();
-    if (cfg.contains("min_ray_length_m")) config.min_ray_length_m = cfg["min_ray_length_m"].cast<float>();
-    if (cfg.contains("merge_with_clear")) config.merge_with_clear = cfg["merge_with_clear"].cast<bool>();
-    if (cfg.contains("normal_available")) config.normal_available = cfg["normal_available"].cast<bool>();
-    if (cfg.contains("reliable_band_ratio")) config.reliable_band_ratio = cfg["reliable_band_ratio"].cast<float>();
-    if (cfg.contains("reliable_normal_ratio_thre")) config.reliable_normal_ratio_thre = cfg["reliable_normal_ratio_thre"].cast<float>();
-    if (cfg.contains("use_const_weight")) config.use_const_weight = cfg["use_const_weight"].cast<bool>();
-    if (cfg.contains("use_weight_dropoff")) config.use_weight_dropoff = cfg["use_weight_dropoff"].cast<bool>();
-    if (cfg.contains("weight_reduction_exp")) config.weight_reduction_exp = cfg["weight_reduction_exp"].cast<float>();
-
-    config.max_weight = cfg["max_weight"].cast<float>();
-    config.voxel_carving_enabled = cfg["voxel_carving_enabled"].cast<bool>();
-    config.min_ray_length_m = cfg["min_ray_length_m"].cast<FloatingPoint>();
-    config.max_ray_length_m = cfg["max_ray_length_m"].cast<FloatingPoint>();
+    // Only override NpTsdfIntegratorBase::Config members that are set in yaml/rosparams
+    config.curve_assumption = cfg["curve_assumption"].cast<bool>();
+    config.max_ray_length_m = cfg["max_ray_length_m"].cast<float>();
+    config.min_ray_length_m = cfg["min_ray_length_m"].cast<float>();
+    config.merge_with_clear = cfg["merge_with_clear"].cast<bool>();
+    config.normal_available = cfg["normal_available"].cast<bool>();
+    config.reliable_band_ratio = cfg["reliable_band_ratio"].cast<float>();
+    config.reliable_normal_ratio_thre = cfg["reliable_normal_ratio_thre"].cast<float>();
     config.use_const_weight = cfg["use_const_weight"].cast<bool>();
-    config.allow_clear = cfg["allow_clear"].cast<bool>();
     config.use_weight_dropoff = cfg["use_weight_dropoff"].cast<bool>();
-    config.use_sparsity_compensation_factor = cfg["use_sparsity_compensation_factor"].cast<bool>();
-    config.sparsity_compensation_factor = cfg["sparsity_compensation_factor"].cast<float>();
-    config.integrator_threads = cfg["integrator_threads"].cast<int>();
-    config.integration_order_mode = cfg["integration_order_mode"].cast<std::string>();
-    config.enable_anti_grazing = cfg["enable_anti_grazing"].cast<bool>();
-    config.start_voxel_subsampling_factor = cfg["start_voxel_subsampling_factor"].cast<float>();
-    config.max_consecutive_ray_collisions = cfg["max_consecutive_ray_collisions"].cast<int>();
-    config.clear_checks_every_n_frames = cfg["clear_checks_every_n_frames"].cast<int>();
+    config.weight_reduction_exp = cfg["weight_reduction_exp"].cast<float>();
+
+    // config.max_weight = cfg["max_weight"].cast<float>();
+    // config.voxel_carving_enabled = cfg["voxel_carving_enabled"].cast<bool>();
+    // config.min_ray_length_m = cfg["min_ray_length_m"].cast<FloatingPoint>();
+    // config.max_ray_length_m = cfg["max_ray_length_m"].cast<FloatingPoint>();
+    // config.use_const_weight = cfg["use_const_weight"].cast<bool>();
+    // config.allow_clear = cfg["allow_clear"].cast<bool>();
+    // config.use_weight_dropoff = cfg["use_weight_dropoff"].cast<bool>();
+    // config.use_sparsity_compensation_factor = cfg["use_sparsity_compensation_factor"].cast<bool>();
+    // config.sparsity_compensation_factor = cfg["sparsity_compensation_factor"].cast<float>();
+    // config.integrator_threads = cfg["integrator_threads"].cast<int>();
+    // config.integration_order_mode = cfg["integration_order_mode"].cast<std::string>();
+    // config.enable_anti_grazing = cfg["enable_anti_grazing"].cast<bool>();
+    // config.start_voxel_subsampling_factor = cfg["start_voxel_subsampling_factor"].cast<float>();
+    // config.max_consecutive_ray_collisions = cfg["max_consecutive_ray_collisions"].cast<int>();
+    // config.clear_checks_every_n_frames = cfg["clear_checks_every_n_frames"].cast<int>();
     return config;
 }
 
