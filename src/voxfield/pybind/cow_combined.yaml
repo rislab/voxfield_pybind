@@ -1,0 +1,153 @@
+# Main config
+voxel_size: 0.02
+sdf_trunc: 0.06
+out_dir: "results/"
+
+# SimpleTsdfIntegrator
+voxels_per_side: 16
+max_weight: 10000.0
+voxel_carving_enabled: false
+min_ray_length_m: 0.1
+max_ray_length_m: 5.0
+use_const_weight: false
+allow_clear: true
+use_weight_dropoff: true
+use_sparsity_compensation_factor: false
+sparsity_compensation_factor: 1.0
+integrator_threads: 1
+
+# Custom integrators configs
+
+# Mode of the ThreadSafeIndex, determines the integration order of the
+# rays. Options: "mixed", "sorted"
+integration_order_mode: "mixed"
+
+# merge integrator specific
+enable_anti_grazing: false
+
+# fast integrator specific
+start_voxel_subsampling_factor: 2.0
+max_consecutive_ray_collisions: 2
+clear_checks_every_n_frames: 1
+
+
+
+
+
+# B is the body frame of the robot, C is the camera/sensor frame creating
+# the pointclouds, and D is the 'dynamic' frame; i.e., incoming pose messages
+# are assumed to be T_G_D.
+
+# actually T_R_C (C = cam0, R = rgbd cam)
+T_B_C:
+- [1.0, 0.0, 0.0, 0.0]
+- [0.0, 1.0, 0.0, 0.0]
+- [0.0, 0.0, 1.0, 0.0]
+- [0.0, 0.0, 0.0, 1.0]
+invert_T_B_C: false
+
+# actually T_V_C (C = cam0, V = vicon (actually the body frame))
+T_B_D:
+- [0.971048, -0.120915, 0.206023, 0.00114049]
+- [0.15701, 0.973037, -0.168959, 0.0450936]
+- [-0.180038, 0.196415, 0.96385, 0.0430765]
+- [0.0, 0.0, 0.0, 1.0]
+invert_T_B_D: true
+
+# model transformation (switch axis)
+T_C_CH:
+- [ 0.0, 0.0, 1.0, 0.0]
+- [-1.0, 0.0, 0.0, 0.0]
+- [ 0.0,-1.0, 0.0, 0.0]
+- [ 0.0, 0.0, 0.0, 1.0]
+invert_T_C_CH: true
+
+# camera intrinsics
+sensor_is_lidar: false
+width: 640  # Px
+height: 480 # Px
+vx: 320
+vy: 240
+fx: 580
+fy: 580
+smooth_thre_ratio: 0.05
+
+# Map 
+voxel_size: &voxel_size 0.02 # from 0.05
+voxels_per_side_in_block: &voxels_per_side_in_block 8
+
+occ_voxel_size: *voxel_size
+occ_voxels_per_side: *voxels_per_side_in_block
+
+tsdf_voxel_size: *voxel_size
+tsdf_voxels_per_side: *voxels_per_side_in_block
+
+esdf_voxel_size: *voxel_size
+esdf_voxels_per_side: *voxels_per_side_in_block
+
+truncation_distance: -2.0
+
+# TSDF integration
+method: fast # select from simple, fast and merged
+merge_with_clear: false
+max_ray_length_m: 5.0
+min_ray_length_m: 0.1
+integration_threads: 6
+normal_available: true
+use_const_weight: false
+use_weight_dropoff: true
+weight_reduction_exp: 2.0
+curve_assumption: true
+reliable_band_ratio: 2.0
+reliable_normal_ratio_thre: 0.05
+
+# ESDF integration
+local_range_offset_x: 20
+local_range_offset_y: 20
+local_range_offset_z: 10
+esdf_default_distance_m: 2.0
+max_behind_surface_m: 0.2 # should be larger than truncation_distance
+num_buckets: 50
+patch_on: true
+early_break: true
+finer_esdf_on: true
+eval_esdf_on: false
+
+# Occupancy grid integration
+occ_voxel_size_ratio: 0.865
+occ_min_weight: 0.0001
+probability_hit: 0.7
+probability_miss: 0.4
+threshold_min: 0.12
+threshold_max: 0.97
+threshold_occupancy: 0.7
+
+# State estimation
+enable_icp: false
+icp_iterations: 10
+use_tf_transforms: false
+world_frame: world
+
+# Timer
+# if set as a negative value, it means the frame interval for the processing
+# for example -5.0 means conduct the operation per 5 frames
+update_mesh_every_n_sec: 0.5
+update_esdf_every_n_sec: 0.2
+publish_map_every_n_sec: 1.0
+eval_esdf_every_n_sec: 0.0
+min_time_between_msgs_sec: 0.0
+
+# Visualization
+color_mode: lambert_color # select from color, normals, height, lambert, lambert_color
+intensity_colormap: rainbow # select from rainbow, inverse_rainbow, grayscale, inverse_grayscale, ironbow
+# publishing settings
+publish_traversable: false
+publish_pointclouds: false
+publish_slices: true
+publish_robot_model: true
+slice_level: 1.0
+robot_model_scale: 2.5
+
+# Logging
+verbose: false
+timing: true

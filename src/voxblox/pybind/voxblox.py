@@ -20,7 +20,7 @@ class BaseTsdfIntegrator(ABC):
         assert isinstance(extrinsic, np.ndarray), "extrinsic must by np.ndarray(4, 4)"
         assert points.dtype == np.float64, "points dtype must be np.float64"
         assert (
-            extrinsic.dtype == np.float or extrinsic.dtype == np.float32
+            extrinsic.dtype == float or extrinsic.dtype == np.float32
         ), "extrinsic dtype must be np.float32 or np.float64"
         self._integrator._integrate(voxblox_pybind._VectorEigen3d(points), extrinsic)
 

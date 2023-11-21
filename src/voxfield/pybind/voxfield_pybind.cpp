@@ -179,8 +179,7 @@ void pybind_integrator(py::module& m) {
              }),
              "voxel_size"_a, "sdf_trunc"_a, "config"_a)
         .def("_integrate",
-             [](Integrator& self, const std::vector<Eigen::Vector3d>& points, 
-             const Eigen::Matrix4f& extrinsics, const py::dict& cfg) {
+             [](Integrator& self, const std::vector<Eigen::Vector3d>& points, const Eigen::Matrix4f& extrinsics, const py::dict& cfg) {
                 auto config = GetNpTsdfServerConfigFromYaml(cfg);
                 auto [points_C, colors] = PointcloudToVoxblox(points);
                 auto T_G_C = voxblox::Transformation(extrinsics);

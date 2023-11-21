@@ -6,9 +6,10 @@ from easydict import EasyDict
 import open3d as o3d
 from tqdm import trange
 import yaml
+from inspect import signature
+from pprint import pprint
 
-from voxblox import SimpleTsdfIntegrator
-# from voxfield import SimpleNpTsdfIntegrator
+from voxfield import SimpleNpTsdfIntegrator, FastNpTsdfIntegrator, MergedNpTsdfIntegrator
 
 
 def load_config(config_file: str):
@@ -27,11 +28,12 @@ class TSDFPipeline:
     def __init__(self, dataset, config_file: str, jump: int, n_scans: int, map_name: str):
         self._dataset = dataset
         self._config = load_config(config_file)
+        pprint(self._config)
         self._n_scans = len(dataset) if n_scans == -1 else n_scans
         self._jump = jump
         self._map_name = map_name
 
-        self._tsdf_volume = SimpleTsdfIntegrator(
+        self._tsdf_volume = FastNpTsdfIntegrator(
             self._config.voxel_size,
             self._config.sdf_trunc,
             self._config,
@@ -55,7 +57,7 @@ class TSDFPipeline:
         for idx in trange(self._jump, self._jump + self._n_scans, unit=" frames"):
             scan, pose = self._dataset[idx]
             tic = time.perf_counter_ns()
-            self._tsdf_volume.integrate(scan, pose)
+            self._tsdf_volume.integrate(scan, pose, self._config)
             toc = time.perf_counter_ns()
             times.append(toc - tic)
         self._res = {
