@@ -3,9 +3,9 @@ from typing import Dict
 
 import numpy as np
 
-from . import voxblox_pybind
-from .config import __default_config__
-
+# from . import voxblox_pybind
+from config import __default_config__
+import voxblox_pybind
 
 class BaseTsdfIntegrator(ABC):
     @abstractmethod

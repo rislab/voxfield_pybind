@@ -201,7 +201,9 @@ void pybind_integrator(py::module& m) {
              [=](const Integrator& self) { return ExtractMeshFromVoxbloxLayer(self.getLayer()); });
 }
 
-PYBIND11_MODULE(voxblox_pybind, m) {
+PYBIND11_MODULE(voxfield_pybind, m) {
+    m.doc() = "Voxfield pybindings";
+
     auto vector3dvector = pybind_eigen_vector_of_vector<Eigen::Vector3d>(
         m, "_VectorEigen3d", "std::vector<Eigen::Vector3d>",
         py::py_array_to_vectors_double<Eigen::Vector3d>);

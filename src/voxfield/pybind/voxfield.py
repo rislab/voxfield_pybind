@@ -3,9 +3,9 @@ from typing import Dict
 
 import numpy as np
 
-from . import voxblox_pybind
-from .config import __default_config__
-
+#from . import voxblox_pybind
+from config import __default_config__
+import voxfield_pybind
 
 class BaseNpTsdfIntegrator(ABC):
     @abstractmethod
@@ -22,7 +22,7 @@ class BaseNpTsdfIntegrator(ABC):
         assert (
             extrinsic.dtype == np.float or extrinsic.dtype == np.float32
         ), "extrinsic dtype must be np.float32 or np.float64"
-        self._integrator._integrate(voxblox_pybind._VectorEigen3d(points), extrinsic)
+        self._integrator._integrate(voxfield_pybind._VectorEigen3d(points), extrinsic)
 
     def extract_triangle_mesh(self):
         """Returns a the vertices and triangles representing the constructed the TriangleMesh.
@@ -40,25 +40,25 @@ class BaseNpTsdfIntegrator(ABC):
         return np.asarray(vertices), np.asarray(triangles)
 
 
-class NpSimpleTsdfIntegrator(BaseNpTsdfIntegrator):
+class SimpleNpTsdfIntegrator(BaseNpTsdfIntegrator):
     def __init__(self, voxel_size: float, sdf_trunc: float, config: Dict = __default_config__):
         super().__init__(voxel_size, sdf_trunc, config)
-        self._integrator = voxblox_pybind._SimpleNpTsdfIntegrator(
+        self._integrator = voxfield_pybind._SimpleNpTsdfIntegrator(
             voxel_size=self.voxel_size, sdf_trunc=self.sdf_trunc, config=self.config
         )
 
 
-class NpFastTsdfIntegrator(BaseNpTsdfIntegrator):
+class FastNpTsdfIntegrator(BaseNpTsdfIntegrator):
     def __init__(self, voxel_size: float, sdf_trunc: float, config: Dict = __default_config__):
         super().__init__(voxel_size, sdf_trunc, config)
-        self._integrator = voxblox_pybind._FastNpTsdfIntegrator(
+        self._integrator = voxfield_pybind._FastNpTsdfIntegrator(
             voxel_size=self.voxel_size, sdf_trunc=self.sdf_trunc, config=self.config
         )
 
 
-class NpMergedTsdfIntegrator(BaseNpTsdfIntegrator):
+class MergedNpTsdfIntegrator(BaseNpTsdfIntegrator):
     def __init__(self, voxel_size: float, sdf_trunc: float, config: Dict = __default_config__):
         super().__init__(voxel_size, sdf_trunc, config)
-        self._integrator = voxblox_pybind._MergedNpTsdfIntegrator(
+        self._integrator = voxfield_pybind._MergedNpTsdfIntegrator(
             voxel_size=self.voxel_size, sdf_trunc=self.sdf_trunc, config=self.config
         )
