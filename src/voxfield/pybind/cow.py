@@ -7,14 +7,14 @@ import numpy as np
 import numpy.matlib
 import open3d as o3d
 
-from cache import get_cache, memoize
+# from cache import get_cache, memoize
 
 
 class CowDataset:
     def __init__(self, data_source, get_color: bool = False, apply_pose: bool = False):
         # Cache
-        self.use_cache = False#True
-        self.cache = get_cache(directory="cache/cow/")
+        # self.use_cache = False#True
+        # self.cache = get_cache(directory="cache/cow/")
         self.get_color = get_color
         self.apply_pose = apply_pose
 
@@ -28,7 +28,7 @@ class CowDataset:
         # poses = np.loadtxt(filename, delimiter=" ", dtype=np.float32)
         return poses.reshape((len(poses), 4, 4))
 
-    @memoize()
+    # @memoize()
     def __getitem__(self, idx):
         pose = self.gt_list[idx]
         pcd = o3d.io.read_point_cloud(self.cloud_files[idx])
