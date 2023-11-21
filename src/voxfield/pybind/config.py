@@ -49,6 +49,28 @@ class VoxBloxConfig:
     weight_reduction_exp: float = 1.0
 
 
+    ### For NpTsdfServerConfig
+    # Sensor specification (all but sensor_is_lidar have no default)
+    width_: int = -1
+    height_: int = -1
+    max_range_: float = -1
+    min_range_: float = -1
+    smooth_thre_ratio_: float = -1
+    sensor_is_lidar_: float = False
+    # Camera (no default)
+    vx_: int = -1
+    vy_: int = -1
+    fx_: int = -1
+    fy_: int = -1
+    # LiDAR (no default)
+    fov_up_: float = -1
+    fov_down_: float = -1
+    fov_down_rad_: float = -1
+    fov_rad_: float = -1
+    # For preprocessing noise filter (mianly for KITTI)
+    min_dist_: float = 0.1
+    min_z_: float = -1000.0
+
     # voxels_per_side: int = 16
     # max_weight: float = 10000.0
     # voxel_carving_enabled: bool = True
