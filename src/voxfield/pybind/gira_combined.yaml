@@ -1,0 +1,140 @@
+# Main config
+voxel_size: 0.1
+sdf_trunc: 0.3
+out_dir: "results/"
+
+# SimpleTsdfIntegrator
+voxels_per_side: 16
+max_weight: 10000.0
+voxel_carving_enabled: false
+min_ray_length_m: 2.0
+max_ray_length_m: 15.0
+use_const_weight: true
+allow_clear: true
+use_weight_dropoff: true
+use_sparsity_compensation_factor: true
+sparsity_compensation_factor: 1.0
+integrator_threads: 1
+
+# Custom integrators configs
+
+# Mode of the ThreadSafeIndex, determines the integration order of the
+# rays. Options: "mixed", "sorted"
+integration_order_mode: "mixed"
+
+# merge integrator specific
+enable_anti_grazing: false
+
+# fast integrator specific
+start_voxel_subsampling_factor: 2.0
+max_consecutive_ray_collisions: 2
+clear_checks_every_n_frames: 1
+
+# kitti:
+preprocess: True
+apply_pose: False
+min_range: 2.0
+max_range: 70
+correct_scan: True
+voxelize: False
+
+
+
+# model transformation
+T_C_CH:
+- [ 1.0, 0.0, 0.0, 0.0]
+- [ 0.0, 1.0, 0.0, 0.0]
+- [ 0.0, 0.0, 1.0, 0.0]
+- [ 0.0, 0.0, 0.0, 1.0]
+invert_T_C_CH: false
+
+# lidar intrinsics
+sensor_is_lidar: true
+width: 512  # Px
+height: 16 # Px
+fov_up: 15.0  # deg
+fov_down: -15.0  # deg
+smooth_thre_ratio: 0.05
+
+
+# Map 
+voxel_size: &voxel_size 0.1
+voxels_per_side_in_block: &voxels_per_side_in_block 16
+
+occ_voxel_size: *voxel_size
+occ_voxels_per_side: *voxels_per_side_in_block
+
+tsdf_voxel_size: *voxel_size
+tsdf_voxels_per_side: *voxels_per_side_in_block
+
+esdf_voxel_size: *voxel_size
+esdf_voxels_per_side: *voxels_per_side_in_block
+
+truncation_distance: -3.0
+
+# TSDF integration
+method: fast # select from simple, fast and merged
+merge_with_clear: true
+max_ray_length_m: 10.0
+min_ray_length_m: 1.0
+integration_threads: 6
+normal_available: true
+use_const_weight: false
+use_weight_dropoff: true
+weight_reduction_exp: 1.0
+curve_assumption: true
+reliable_band_ratio: 2.0
+reliable_normal_ratio_thre: 0.05
+
+# ESDF integration
+local_range_offset_x: 20
+local_range_offset_y: 20
+local_range_offset_z: 5
+esdf_default_distance_m: 2.5
+max_behind_surface_m: 0.5 # should be larger than truncation_distance
+num_buckets: 50
+patch_on: true
+early_break: true
+finer_esdf_on: true
+eval_esdf_on: false
+
+# Occupancy grid integration
+occ_voxel_size_ratio: 0.865
+occ_min_weight: 0.0001
+probability_hit: 0.7
+probability_miss: 0.4
+threshold_min: 0.12
+threshold_max: 0.97
+threshold_occupancy: 0.7
+
+# State estimation 
+enable_icp: true
+icp_refine_roll_pitch: false
+icp_iterations: 15
+use_tf_transforms: true
+world_frame: world
+sensor_frame: velodyne
+
+# Timer
+# if set as a negative value, it means the frame interval for the processing
+# for example -5.0 means conduct the operation per 5 frames
+update_mesh_every_n_sec: 0.5
+update_esdf_every_n_sec: 0.5
+publish_map_every_n_sec: 0.5
+eval_esdf_every_n_sec: 0.0
+min_time_between_msgs_sec: 0.0
+
+# Visualization
+color_mode: lambert_color # select from color, normals, height, lambert, lambert_color
+intensity_colormap: rainbow # select from rainbow, inverse_rainbow, grayscale, inverse_grayscale, ironbow
+# publishing settings
+publish_traversable: false
+publish_pointclouds: false
+publish_slices: true
+publish_robot_model: true
+slice_level: 0.3
+robot_model_scale: 1.0
+
+# Logging
+verbose: false
+timing: true

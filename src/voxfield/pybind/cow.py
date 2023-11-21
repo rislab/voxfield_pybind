@@ -24,8 +24,8 @@ class CowDataset:
 
     @staticmethod
     def read_gt_list(filename):
-        # poses = np.loadtxt(filename, delimiter=",", dtype=np.float32)
-        poses = np.loadtxt(filename, delimiter=" ", dtype=np.float32)
+        poses = np.loadtxt(filename, delimiter=",", dtype=np.float32)
+        # poses = np.loadtxt(filename, delimiter=" ", dtype=np.float32)
         return poses.reshape((len(poses), 4, 4))
 
     @memoize()
