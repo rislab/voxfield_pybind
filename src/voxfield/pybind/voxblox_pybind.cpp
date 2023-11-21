@@ -46,9 +46,9 @@ struct to_string {
         static char const* value() { return #T; } \
     };
 
-REGISTER_INTEGRATOR_TYPE(NpSimpleTsdfIntegrator);
-REGISTER_INTEGRATOR_TYPE(NpFastTsdfIntegrator);
-REGISTER_INTEGRATOR_TYPE(NpMergedTsdfIntegrator);
+REGISTER_INTEGRATOR_TYPE(SimpleNpTsdfIntegrator);
+REGISTER_INTEGRATOR_TYPE(FastNpTsdfIntegrator);
+REGISTER_INTEGRATOR_TYPE(MergedNpTsdfIntegrator);
 
 }  // namespace voxblox
 
@@ -193,9 +193,9 @@ void pybind_integrator(py::module& m) {
                 cv::Mat normal_image = computeNormalImage(vertex_map, depth_image, config);
                 // Back project to point cloud from range images
                 points_C = extractPointCloud(vertex_map, depth_image);
-                normals_C = extractNormals(normal_image, depth_image);
+                auto normals_C = extractNormals(normal_image, depth_image);
                 colors = extractColors(color_image, depth_image);
-                self.integratePointCloud(T_G_C, points_C, colors);
+                self.integratePointCloud(T_G_C, points_C, normals_C, colors);
              })
         .def("_extract_triangle_mesh",
              [=](const Integrator& self) { return ExtractMeshFromVoxbloxLayer(self.getLayer()); });
@@ -210,8 +210,8 @@ PYBIND11_MODULE(voxblox_pybind, m) {
         m, "_VectorEigen3i", "std::vector<Eigen::Vector3i>",
         py::py_array_to_vectors_int<Eigen::Vector3i>);
 
-    pybind_integrator<NpSimpleTsdfIntegrator>(m);
-    pybind_integrator<NpFastTsdfIntegrator>(m);
-    pybind_integrator<NpMergedTsdfIntegrator>(m);
+    pybind_integrator<SimpleNpTsdfIntegrator>(m);
+    pybind_integrator<FastNpTsdfIntegrator>(m);
+    pybind_integrator<MergedNpTsdfIntegrator>(m);
 };
 }  // namespace voxblox

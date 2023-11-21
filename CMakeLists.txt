@@ -8,7 +8,6 @@ find_package(catkin REQUIRED COMPONENTS
         pybind11_catkin
         voxblox
         voxblox_ros
-        yaml-cpp
 )
 
 # declares dependencies for packages that depend on this package
@@ -30,5 +29,5 @@ include_directories(
 pybind_add_module(voxblox_pybind src/voxblox/pybind/voxblox_pybind.cpp)
 target_include_directories(voxblox_pybind PUBLIC ${pybind11_catkin_INCLUDE_DIRS})
 
-pybind_add_module(voxfield_pybind src/voxblox/pybind/voxfield_pybind.cpp)
+pybind_add_module(voxfield_pybind src/voxfield/pybind/voxblox_pybind.cpp)
 target_include_directories(voxfield_pybind PUBLIC ${pybind11_catkin_INCLUDE_DIRS})
