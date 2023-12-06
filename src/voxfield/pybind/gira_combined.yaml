@@ -1,5 +1,5 @@
 # Main config
-voxel_size: 0.1
+voxel_size: 0.2
 sdf_trunc: 0.3
 out_dir: "results/"
 
@@ -58,7 +58,7 @@ smooth_thre_ratio: 0.05
 
 
 # Map 
-voxel_size: &voxel_size 0.1
+voxel_size: &voxel_size 0.2
 voxels_per_side_in_block: &voxels_per_side_in_block 16
 
 occ_voxel_size: *voxel_size
