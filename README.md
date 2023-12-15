@@ -1,3 +1,34 @@
+# Fork Addendum
+Here's what's been changed in this fork.
+1. Added pybindings for Voxfield TSDF integrator
+2. Bindings work on GIRA dataset and cow and lady dataset
+    - Can also work on other datasets. The most important part is that
+    the config parameters (e.g. sensor specs & voxel size) are set properly.
+
+**How to build**:
+```
+cd wet/src
+catkin build voxfield_pybind
+# might also need to source it:
+source devel/setup.bash # or setup.zsh
+```
+
+**How to run**:
+*note cow.py line 27 has to be changed depending on if the data csv delimiter*
+1. Cow pipeline
+```
+cd voxfield_pybind/src/voxfield/pybind
+python3 cow_pipeline.py ~/Downloads/datasets/bonn_cow_lady_dataset/cow_and_lady_dataset/ -v -c cow_combined.yaml
+```
+2. GIRA pipeline
+```
+cd voxfield_pybind/src/voxfield/pybind
+python3 cow_pipeline.py ~/Downloads/datasets/ -v -c gira_combined.yaml
+```
+
+**Issues**:
+- Might be a segfault causing map artifacts about ~10% of the time
+---
 # Voxblox Python Bindings
 
 This small library provides python Bindings for the
